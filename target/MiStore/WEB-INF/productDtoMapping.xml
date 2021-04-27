@@ -1,0 +1,25 @@
+<mapping>
+    <class name ="com.dto.ProductDtoList"></class>
+    <map-to xml="ProductDtoList" />
+    <field name="productId" type="integer">
+        <bind.xml name="productId" node="element"/>
+    </field>
+    <field name="productName" type="string">
+        <bind.xml name="" node="element"/>
+    </field>
+    <field name="inr" type="float">
+        <bind.xml name="inr" node="element"/>
+    </field>
+    <field name="usd" type="float">
+        <bind.xml name="usd" node="element"/>
+    </field>
+    <field name="description" type="string">
+        <bind.xml name="description" node="element"/>
+    </field>
+    <field name="company" type="string">
+        <bind.xml name="company" node="element"/>
+    </field>
+    <field name="specification" type="string">
+        <bind.xml name="specification" node="element"/>
+    </field>
+</mapping>

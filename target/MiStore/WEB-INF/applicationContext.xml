@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="productValidator" class="com.customvalidator.ProductValidator"></bean>
+
+    <bean id="productsService" class="com.service.ProductsServiceImpl">
+        <property name="productsDao" ref="productsDao"/>
+        <property name="oxmService" ref="oxmService"/>
+        <property name="todayValue" value="64"/>
+        <property name="xmlService" ref="xmlService"/>
+    </bean>
+
+    <bean id="productsDao" class="com.dao.ProductsDaoImpl">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="driverManagerDataSource"/>
+    </bean>
+
+    <bean id="driverManagerDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/mistore"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+
+    <bean id="restClientService" class="com.serviceClient.RestClientServiceImpl">
+        <property name="restTemplate" ref="restTemplate"/>
+    </bean>
+
+    <bean id="restTemplate" class="org.springframework.web.client.RestTemplate" >
+        <property name="messageConverters">
+            <util:list>
+                <bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+            </util:list>
+        </property>
+    </bean>
+
+    <bean id="productServerService" class="com.serviceServer.ProductServerServiceImpl" primary="true">
+        <property name="productsDao" ref="productsDao"/>
+    </bean>
+
+    <bean id="oxmService" class="com.service.OxmService">
+        <property name="marshaller" ref="castorMarshaller"/>
+        <property name="unmarshaller" ref="castorMarshaller"/>
+    </bean>
+
+    <bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+        <property name="targetClass" value="com.dto.ProductDto"></property>
+        <property name="mappingLocation" value="/WEB-INF/productDtoMapping.xml"/>
+    </bean>
+
+    <bean id="xmlService" class="com.ServiceJaxB.XmlServiceImpl">
+        <property name="marshaller" ref="jaxb2Marshaller"/>
+        <property name="unmarshaller" ref="jaxb2Marshaller"/>
+    </bean>
+
+    <bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller" >
+        <property name="classesToBeBound">
+            <list>
+                <value>com.dto.ReqresDto</value>
+                <value>com.dto.ProductDtoList</value>
+            </list>
+        </property>
+    </bean>
+
+</beans>
